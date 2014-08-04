@@ -11,16 +11,17 @@ angular.module("angular-google-maps-example", ["google-maps".ns(),'google-maps.p
     v: '3.16',
     libraries: 'weather,geometry,visualization'
   });
-  GoogleMapApi.$get().then(function(maps) {
-    maps.visualRefresh = true;
-  });
+;
 }])
 
 .run(['$templateCache', function ($templateCache) {
   $templateCache.put('control.tpl.html', '<button class="btn btn-sm btn-primary" ng-class="{\'btn-warning\': danger}" ng-click="controlClick()">{{controlText}}</button>');
 }])
 
-.controller('controlController', function ($scope) {
+.controller('controlController', function ($scope, GoogleMapApi) {
+  GoogleMapApi.then(function(maps) {
+    maps.visualRefresh = true;
+  });
   $scope.controlText = 'I\'m a custom control';
   $scope.danger = false;
   $scope.controlClick = function () {

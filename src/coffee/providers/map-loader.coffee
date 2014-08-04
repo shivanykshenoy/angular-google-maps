@@ -28,7 +28,7 @@ angular.module('google-maps.providers'.ns())
 ])
 #holy hool!!, any time your passing a dependency to a "provider" you must append the Provider text to the service
 # name.. makes no sense and this is not documented well
-.provider('GoogleMapApi'.ns(), ['$injector', 'MapScriptLoaderProvider'.ns(), ($injector, loadScript) ->
+.provider('GoogleMapApi'.ns(), () ->
     # Some nice default options
     @options =
     #    key: 'api-key here',
@@ -43,10 +43,9 @@ angular.module('google-maps.providers'.ns())
       return
 
     # Return an instance of the service
-    @$get = =>
-      loader = $injector.invoke(loadScript.$get)
-
+    @$get = ["MapScriptLoader", (load) =>
       @promise = loader.load @options
       @promise
+    ]
     @
-  ])
+  )
