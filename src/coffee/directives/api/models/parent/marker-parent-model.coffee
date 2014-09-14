@@ -20,7 +20,16 @@ angular.module("google-maps.directives.api.models.parent")
             if @doClick and scope.click?
               @scope.click()
 
-          @setEvents @scope.gMarker, scope, scope
+          @listeners = @setEvents @scope.gMarker, scope, scope
+          internal =
+            events :
+              dragend : (gMarker, eventName) =>
+                @scope.coords =
+                  latitude: gMarker.getPosition().lat()
+                  longitude: gMarker.getPosition().lng()
+
+
+          @internalListeners = @setEvents @scope.gMarker, internal
           @$log.info(@)
 
 
@@ -67,6 +76,8 @@ angular.module("google-maps.directives.api.models.parent")
             return
           #remove from gMaps and then free resources
           @scope.gMarker.setMap null
+          @removeListeners @listeners
+          @removeListeners @internalListeners
           google.maps.event.removeListener @listener
           @listener = null
           @gMarkerManager.remove @scope.gMarker, false
